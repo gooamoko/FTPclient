@@ -6,25 +6,31 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.IOException;
 
 public class FtpClient {
+    private final static int DEFAULT_FTP_PORT = 21;
     private String server;
-    private int port = 21;
+    private int port;
     private String user;
     private String password;
     private FTPClient ftp;
 
-    public FtpClient(String server, String user, String password) {
+    public FtpClient(String server, String port, String user, String password) {
         this.server = server;
         this.user = user;
         this.password = password;
+
+        try {
+            this.port = Integer.parseInt(port);
+        } catch (NumberFormatException e) {
+            this.port = DEFAULT_FTP_PORT;
+        }
     }
 
     public void open() {
         try {
             ftp = new FTPClient();
-
             ftp.addProtocolCommandListener(new CustomProtocolCommandListener());
-
             ftp.connect(server, port);
+
             int reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
@@ -32,7 +38,7 @@ public class FtpClient {
             }
 
             ftp.login(user, password);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new FtpException(e.getMessage(), e);
         }
     }

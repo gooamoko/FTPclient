@@ -15,17 +15,19 @@ public class ConnectionCheckTask extends FtpClientTask {
     @Override
     protected String doInBackground(String... arg) {
         String host = arg[0];
-        String user = arg[1];
-        String password = arg[2];
+        String port = arg[1];
+        String user = arg[2];
+        String password = arg[3];
 
         String message;
         try {
-            FtpClient client = new FtpClient(host, user, password);
+            FtpClient client = new FtpClient(host, port, user, password);
             client.open();
             client.close();
 
             message = String.format(successMessage, host, user);
         } catch (Exception e) {
+            // TODO: 13.02.20 Выводить хост, порт логин и ошибку только при неудачном подключении
             message = String.format(errorMessage, host, user);
         }
         return message;
