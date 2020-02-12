@@ -18,7 +18,7 @@ public class FtpClient {
         this.password = password;
     }
 
-    void open() {
+    public void open() {
         try {
             ftp = new FTPClient();
 
@@ -37,7 +37,7 @@ public class FtpClient {
         }
     }
 
-    void close() throws IOException {
+    public void close() throws IOException {
         ftp.disconnect();
     }
 }

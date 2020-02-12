@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SettingsActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="1dp"
@@ -23,70 +22,70 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/hostLabel"
+            android:id="@+id/settingsHostLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/host_label" />
 
         <EditText
-            android:id="@+id/hostEdit"
+            android:id="@+id/setingsHostEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="@string/host_hint"
-            android:text=""
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <TextView
-            android:id="@+id/userLabel"
+            android:id="@+id/settingsPortLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/port_label" />
+
+        <EditText
+            android:id="@+id/settingsPortEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/port_hint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:text="@string/port_default" />
+
+        <TextView
+            android:id="@+id/settingsUserLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/user_label" />
 
         <EditText
-            android:id="@+id/userEdit"
+            android:id="@+id/settingsUserEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="@string/user_hint"
-            android:text=""
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <TextView
-            android:id="@+id/passwordLabel"
+            android:id="@+id/settingsPasswordLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/password_label" />
 
         <EditText
-            android:id="@+id/passwordEdit"
+            android:id="@+id/settingsPasswordEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword"
             android:hint="@string/password_hint"
-            android:text=""
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/checkButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/check_btn" />
-
-        <Button
-            android:id="@+id/uploadButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/upload_btn" />
-
-        <Button
-            android:id="@+id/exitButton"
+            android:id="@+id/settingsExitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/exit_btn" />
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

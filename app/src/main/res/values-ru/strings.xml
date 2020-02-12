@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FTP клиент</string>
-    <string name="host_name">Узел</string>
-    <string name="user_name">Пользователь</string>
-    <string name="user_password">Пароль</string>
+    <string name="host_label">Узел</string>
+    <string name="user_label">Пользователь</string>
+    <string name="password_label">Пароль</string>
     <string name="check_btn">Проверить соединение</string>
     <string name="upload_btn">Загрузить файл</string>
     <string name="exit_btn">Выход</string>
-    <string name="host_hint">Укажите имя или IP-адрес</string>
-    <string name="name_hint">Введите логин пользователя</string>
+    <string name="host_hint">Введите имя или IP-адрес</string>
+    <string name="user_hint">Введите логин пользователя</string>
     <string name="password_hint">Введите пароль пользователя</string>
     <string name="channel_name">FTP клиент</string>
     <string name="channel_description">Приложение для загрузки файлов на FTP</string>
-    <string name="check_success_msg">Успешно подключились к узлу %s под логином %s</string>
+    <string name="check_success_msg">Успешно подключились к узлу %1$s под логином %2$s</string>
     <string name="check_msg_title">Проверка подключения</string>
-    <string name="check_error_msg">Не удалось подключиться к узлу %s под логином %s</string>
+    <string name="check_error_msg">Не удалось подключиться к узлу %1$s под логином %2$s</string>
+    <string name="item_settings_title">Настройки</string>
+    <string name="settings_activity_label">Настройки FTP клиента</string>
+    <string name="port_label">Порт</string>
+    <string name="port_default">21</string>
+    <string name="port_hint">Введите номер порта</string>
 </resources>

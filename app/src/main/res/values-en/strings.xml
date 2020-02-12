@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FTP client</string>
-    <string name="host_name">Host</string>
-    <string name="user_name">User</string>
-    <string name="user_password">Password</string>
+    <string name="host_label">Host</string>
+    <string name="user_label">User</string>
+    <string name="password_label">Password</string>
     <string name="check_btn">Test connection</string>
     <string name="upload_btn">Upload file</string>
     <string name="exit_btn">Exit</string>
     <string name="host_hint">Enter hostname or IP address</string>
-    <string name="name_hint">Enter user login</string>
+    <string name="user_hint">Enter user login</string>
     <string name="password_hint">Enter user password</string>
     <string name="channel_name">FTP Client</string>
     <string name="channel_description">Application for upload files to FTP</string>
-    <string name="check_success_msg">Successfully connected to host %s with login %s</string>
+    <string name="check_success_msg">Successfully connected to host %1$s with login %2$s</string>
     <string name="check_msg_title">Connection check</string>
-    <string name="check_error_msg">Can\'t connect to host %s with login %s</string>
+    <string name="check_error_msg">Can\'t connect to host %1$s with login %2$s</string>
+    <string name="item_settings_title">Settings</string>
+    <string name="settings_activity_label">FTP Client settings</string>
+    <string name="port_label">Port</string>
+    <string name="port_default">21</string>
+    <string name="port_hint">Enter port number</string>
 </resources>

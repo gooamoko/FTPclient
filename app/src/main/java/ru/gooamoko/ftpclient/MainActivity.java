@@ -1,17 +1,25 @@
 package ru.gooamoko.ftpclient;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import ru.gooamoko.ftpclient.asynctask.ConnectionCheckTask;
+import ru.gooamoko.ftpclient.asynctask.FtpClientTaskCallback;
 
 public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "FTPCLNT";
@@ -29,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createNotificationChannel();
-
         hostEdit = findViewById(R.id.hostEdit);
         userEdit = findViewById(R.id.userEdit);
         passwordEdit = findViewById(R.id.passwordEdit);
@@ -44,8 +50,20 @@ public class MainActivity extends AppCompatActivity {
                 String password = passwordEdit.getText().toString();
 
                 checkButton.setEnabled(false);
-                AsyncCheckRequest checkRequest = new AsyncCheckRequest();
-                checkRequest.execute(host, user, password);
+
+                final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
+                    @Override
+                    public void onFinishTask(String message) {
+                        showToast(message);
+                        checkButton.setEnabled(true);
+                    }
+                };
+
+                String successMsg = getString(R.string.check_success_msg);
+                String errorMsg = getString(R.string.check_error_msg);
+
+                ConnectionCheckTask checkTask = new ConnectionCheckTask(callback, successMsg, errorMsg);
+                checkTask.execute(host, user, password);
             }
         });
 
@@ -56,6 +74,30 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+//        createNotificationChannel();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void showToast(String message) {
+        Context context = getApplicationContext();
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
 
@@ -88,38 +130,5 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         notificationManager.notify(notificationId++, builder.build());
-    }
-
-    class AsyncCheckRequest extends AsyncTask<String, Integer, String> {
-        String title;
-
-        AsyncCheckRequest() {
-            this.title = getString(R.string.check_msg_title);
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-            String host = arg[0];
-            String user = arg[1];
-            String password = arg[2];
-
-            String message;
-            try {
-                FtpClient client = new FtpClient(host, user, password);
-                client.open();
-                client.close();
-
-                message = String.format(getString(R.string.check_success_msg), host, user);
-            } catch (Exception e) {
-                message = String.format(getString(R.string.check_error_msg), host, user);
-            }
-            return message;
-        }
-
-        @Override
-        protected void onPostExecute(String message) {
-            super.onPostExecute(message);
-            sendNotification(title, message);
-        }
     }
 }
