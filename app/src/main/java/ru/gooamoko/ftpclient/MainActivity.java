@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,18 +19,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import ru.gooamoko.ftpclient.asynctask.ConnectionCheckTask;
-import ru.gooamoko.ftpclient.asynctask.FtpClientTaskCallback;
-
 public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "FTPCLNT";
 
-    private Button exitButton;
-    private Button checkButton;
-    private Button uploadButton;
-    private EditText hostEdit;
     private EditText userEdit;
-    private EditText passwordEdit;
     private int notificationId;
 
     @Override
@@ -37,41 +30,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        hostEdit = findViewById(R.id.hostEdit);
         userEdit = findViewById(R.id.userEdit);
-        passwordEdit = findViewById(R.id.passwordEdit);
 
-        checkButton = findViewById(R.id.checkButton);
-        checkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String host = hostEdit.getText().toString();
-                String user = userEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
-
-                checkButton.setEnabled(false);
-
-                final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
-                    @Override
-                    public void onFinishTask(String message) {
-                        showToast(message);
-                        checkButton.setEnabled(true);
-                    }
-                };
-
-                String successMsg = getString(R.string.check_success_msg);
-                String errorMsg = getString(R.string.check_error_msg);
-
-                ConnectionCheckTask checkTask = new ConnectionCheckTask(callback, successMsg, errorMsg);
-                checkTask.execute(host, user, password);
-            }
-        });
-
-        exitButton = findViewById(R.id.exitButton);
+        Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        Button uploadButton = findViewById(R.id.uploadButton);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testPreferences();
             }
         });
 
@@ -100,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
+    private void testPreferences() {
+        SharedPreferences preferences = getSharedPreferences(FtpClient.PREFERENCES_NAME, MODE_PRIVATE);
+        String host = preferences.getString(FtpClient.HOST, "");
+        String port = preferences.getString(FtpClient.PORT, "21");
+        String user = preferences.getString(FtpClient.USER, "");
+        String password = preferences.getString(FtpClient.PASSWORD, "");
+        String message = String.format("host: %s\nport: %s\nuser: %s\npassword: %s", host, port, user, password);
+        showToast(message);
+    }
 
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because

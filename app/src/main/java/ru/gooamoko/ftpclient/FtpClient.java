@@ -6,7 +6,12 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.IOException;
 
 public class FtpClient {
-    private final static int DEFAULT_FTP_PORT = 21;
+    public static final String PREFERENCES_NAME = FtpClient.class.getName();
+    public static final String HOST = "host";
+    public static final String PORT = "port";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+    private static final int DEFAULT_FTP_PORT = 21;
     private String server;
     private int port;
     private String user;

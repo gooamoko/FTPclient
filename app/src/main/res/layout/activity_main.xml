@@ -23,22 +23,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/hostLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/host_label" />
-
-        <EditText
-            android:id="@+id/hostEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/host_hint"
-            android:text=""
-            android:importantForAutofill="no" />
-
-        <TextView
             android:id="@+id/userLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,28 +37,6 @@
             android:hint="@string/user_hint"
             android:text=""
             android:importantForAutofill="no" />
-
-        <TextView
-            android:id="@+id/passwordLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password_label" />
-
-        <EditText
-            android:id="@+id/passwordEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:hint="@string/password_hint"
-            android:text=""
-            android:importantForAutofill="no" />
-
-        <Button
-            android:id="@+id/checkButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/check_btn" />
 
         <Button
             android:id="@+id/uploadButton"

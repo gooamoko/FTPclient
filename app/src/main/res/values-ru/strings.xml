@@ -4,7 +4,7 @@
     <string name="host_label">Узел</string>
     <string name="user_label">Пользователь</string>
     <string name="password_label">Пароль</string>
-    <string name="check_btn">Проверить соединение</string>
+    <string name="settings_check_btn">Проверить соединение</string>
     <string name="upload_btn">Загрузить файл</string>
     <string name="exit_btn">Выход</string>
     <string name="host_hint">Введите имя или IP-адрес</string>
@@ -20,4 +20,6 @@
     <string name="port_label">Порт</string>
     <string name="port_default">21</string>
     <string name="port_hint">Введите номер порта</string>
+    <string name="settings_save_btn">Сохранить</string>
+    <string name="settings_save_message">Настройки сохранены</string>
 </resources>
