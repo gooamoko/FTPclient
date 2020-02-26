@@ -88,11 +88,5 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_check_btn" />
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_save_btn" />
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

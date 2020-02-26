@@ -11,6 +11,8 @@ public class FtpClient {
     public static final String PORT = "port";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
+    public static final String SUCCESS = "success";
+    public static final String ERROR = "error";
     private static final int DEFAULT_FTP_PORT = 21;
     private String server;
     private int port;

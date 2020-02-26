@@ -12,14 +12,14 @@
     <string name="password_hint">Введите пароль пользователя</string>
     <string name="channel_name">FTP клиент</string>
     <string name="channel_description">Приложение для загрузки файлов на FTP</string>
-    <string name="check_success_msg">Успешно подключились к узлу %1$s под логином %2$s</string>
+    <string name="check_success_msg">Успешно подключились.</string>
     <string name="check_msg_title">Проверка подключения</string>
-    <string name="check_error_msg">Не удалось подключиться к узлу %1$s под логином %2$s</string>
+    <string name="check_error_msg">Не удалось подключиться к узлу %1$s и порту %2$s под логином %3$s.</string>
     <string name="item_settings_title">Настройки</string>
     <string name="settings_activity_label">Настройки FTP клиента</string>
     <string name="port_label">Порт</string>
     <string name="port_default">21</string>
     <string name="port_hint">Введите номер порта</string>
     <string name="settings_save_btn">Сохранить</string>
-    <string name="settings_save_message">Настройки сохранены</string>
+    <string name="settings_save_message">Настройки сохранены.</string>
 </resources>

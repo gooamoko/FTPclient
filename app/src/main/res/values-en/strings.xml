@@ -12,14 +12,14 @@
     <string name="password_hint">Enter user password</string>
     <string name="channel_name">FTP Client</string>
     <string name="channel_description">Application for upload files to FTP</string>
-    <string name="check_success_msg">Successfully connected to host %1$s with login %2$s</string>
+    <string name="check_success_msg">Successfully connected.</string>
     <string name="check_msg_title">Connection check</string>
-    <string name="check_error_msg">Can\'t connect to host %1$s with login %2$s</string>
+    <string name="check_error_msg">Can\'t connect to host %1$s and port %2$s with login %3$s.</string>
     <string name="item_settings_title">Settings</string>
     <string name="settings_activity_label">FTP Client settings</string>
     <string name="port_label">Port</string>
     <string name="port_default">21</string>
     <string name="port_hint">Enter port number</string>
     <string name="settings_save_btn">Save</string>
-    <string name="settings_save_message">Settings saved</string>
+    <string name="settings_save_message">Settings saved.</string>
 </resources>
