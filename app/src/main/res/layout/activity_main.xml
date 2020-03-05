@@ -38,6 +38,12 @@
             android:text=""
             android:importantForAutofill="no" />
 
+        <TextView
+            android:id="@+id/errorView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent" />
+
         <Button
             android:id="@+id/uploadButton"
             android:layout_width="match_parent"
