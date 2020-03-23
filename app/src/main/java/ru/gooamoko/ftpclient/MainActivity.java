@@ -103,6 +103,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123 && resultCode == RESULT_OK) {
+            Uri selectedfile = data.getData(); //The uri with the location of the file
+            showToast(selectedfile != null ? selectedfile.toString() : "No file selected!");
+        }
+    }
+
 
     private void showToast(String message) {
         Context context = getApplicationContext();
@@ -141,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
         String password = preferences.getString(FtpClient.PASSWORD, "");
         String message = String.format("host: %s\nport: %s\nuser: %s\npassword: %s", host, port, user, password);
         showToast(message);
+
+        Intent intent = new Intent()
+                .setType("*/*")
+                .setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
     }
 
     private void createNotificationChannel() {
