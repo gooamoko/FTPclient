@@ -4,29 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".UploadActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/uploadButton"
+        <TextView
+            android:id="@+id/uploadDescriptionView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/upload_btn" />
+            android:layout_height="181dp" />
 
         <Button
-            android:id="@+id/exitButton"
+            android:id="@+id/acceptUploadButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exit_btn" />
+            android:text="@string/upload_accept_btn" />
 
+        <Button
+            android:id="@+id/cancelUploadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_cancel_btn" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

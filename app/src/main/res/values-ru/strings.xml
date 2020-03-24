@@ -5,7 +5,7 @@
     <string name="user_label">Пользователь</string>
     <string name="password_label">Пароль</string>
     <string name="settings_check_btn">Проверить соединение</string>
-    <string name="upload_btn">Загрузить файл</string>
+    <string name="upload_btn">Выберите файл для загрузки</string>
     <string name="exit_btn">Выход</string>
     <string name="host_hint">Введите имя или IP-адрес</string>
     <string name="user_hint">Введите логин пользователя</string>
@@ -22,4 +22,8 @@
     <string name="port_hint">Введите номер порта</string>
     <string name="settings_save_btn">Сохранить</string>
     <string name="settings_save_message">Настройки сохранены.</string>
+    <string name="filedlg_title">Выберите файл</string>
+    <string name="upload_activity_label">Загрузить</string>
+    <string name="upload_accept_btn">Начать загрузку</string>
+    <string name="upload_cancel_btn">Отменить загрузку</string>
 </resources>

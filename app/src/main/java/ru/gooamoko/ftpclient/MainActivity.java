@@ -2,72 +2,31 @@ package ru.gooamoko.ftpclient;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "FTPCLNT";
+    private static final int FILE_DLG_REQUEST_CODE = 123;
 
-    private EditText folderEdit;
-    private TextView errorView;
     private int notificationId;
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        folderEdit = findViewById(R.id.userEdit);
-        errorView = findViewById(R.id.errorView);
-
-        Intent intent = getIntent();
-        if (intent != null) {
-            ClipData clipData = intent.getClipData();
-            if (clipData == null) {
-                errorView.setText("No URI received");
-            } else {
-                int itemCount = clipData.getItemCount();
-
-                if (itemCount > 0) {
-                    ClipData.Item item = clipData.getItemAt(0);
-                    File file = getFile(item.getUri());
-                    if (file != null && file.canRead()) {
-                        String message = String.format("%s (%s)", file.getAbsolutePath(), getMimeType(item.getUri()));
-                        errorView.setText(message);
-                    } else {
-                        errorView.setText("Can't read " + file.getAbsolutePath());
-                    }
-                } else {
-                    errorView.setText("No items found");
-                }
-            }
-        } else {
-            errorView.setText("Intent is null!");
-        }
 
         Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile();
+                selectFileToUpload();
             }
         });
 
@@ -104,14 +63,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 123 && resultCode == RESULT_OK) {
-            Uri selectedfile = data.getData(); //The uri with the location of the file
-            showToast(selectedfile != null ? selectedfile.toString() : "No file selected!");
+    protected void onActivityResult(int requestCode, int resultCode, Intent fileIntent) {
+        super.onActivityResult(requestCode, resultCode, fileIntent);
+        if(requestCode == FILE_DLG_REQUEST_CODE && resultCode == RESULT_OK) {
+            confirmUploadFiles(fileIntent);
         }
     }
 
+
+    private void confirmUploadFiles(Intent fileIntent) {
+        Intent uploadIntent = new Intent(this, UploadActivity.class);
+        uploadIntent.setClipData(fileIntent.getClipData());
+        uploadIntent.setData(fileIntent.getData());
+        startActivity(uploadIntent);
+    }
 
     private void showToast(String message) {
         Context context = getApplicationContext();
@@ -119,43 +84,13 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    private File getFile(Uri uri) {
-        try {
-            if (uri != null) {
-                URI fileUri = new URI(uri.toString());
-                return new File(fileUri);
-            }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getMimeType(Uri uri) {
-        String type = null;
-        if (uri != null) {
-            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
-            if (extension != null) {
-                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-            }
-        }
-        return type;
-    }
-
-    private void uploadFile() {
-        SharedPreferences preferences = getSharedPreferences(FtpClient.PREFERENCES_NAME, MODE_PRIVATE);
-        String host = preferences.getString(FtpClient.HOST, "");
-        String port = preferences.getString(FtpClient.PORT, "21");
-        String user = preferences.getString(FtpClient.USER, "");
-        String password = preferences.getString(FtpClient.PASSWORD, "");
-        String message = String.format("host: %s\nport: %s\nuser: %s\npassword: %s", host, port, user, password);
-        showToast(message);
-
+    private void selectFileToUpload() {
         Intent intent = new Intent()
                 .setType("*/*")
                 .setAction(Intent.ACTION_GET_CONTENT);
 
-        startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+        Intent chooser = Intent.createChooser(intent, getString(R.string.filedlg_title));
+        startActivityForResult(chooser, FILE_DLG_REQUEST_CODE);
     }
 
     private void createNotificationChannel() {

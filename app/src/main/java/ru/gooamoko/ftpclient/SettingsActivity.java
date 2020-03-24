@@ -26,17 +26,17 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        preferences = getPreferences();
+        SharedPreferences sharedPreferences = getPreferences();
 
         hostEdit = findViewById(R.id.setingsHostEdit);
         portEdit = findViewById(R.id.settingsPortEdit);
         userEdit = findViewById(R.id.settingsUserEdit);
         passwordEdit = findViewById(R.id.settingsPasswordEdit);
 
-        hostEdit.setText(preferences.getString(FtpClient.HOST, ""));
-        portEdit.setText(preferences.getString(FtpClient.PORT, "21"));
-        userEdit.setText(preferences.getString(FtpClient.USER, ""));
-        passwordEdit.setText(preferences.getString(FtpClient.PASSWORD, ""));
+        hostEdit.setText(sharedPreferences.getString(FtpClient.HOST, ""));
+        portEdit.setText(sharedPreferences.getString(FtpClient.PORT, "21"));
+        userEdit.setText(sharedPreferences.getString(FtpClient.USER, ""));
+        passwordEdit.setText(sharedPreferences.getString(FtpClient.PASSWORD, ""));
 
         checkButton = findViewById(R.id.checkButton);
         checkButton.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +79,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @SuppressLint("ApplySharedPref")
     private void storeProperties() {
-        SharedPreferences preferences = getPreferences();
-        Editor ed = preferences.edit();
+        SharedPreferences sharedPreferences = getPreferences();
+        Editor ed = sharedPreferences.edit();
         ed.putString(FtpClient.HOST, hostEdit.getText().toString());
         ed.putString(FtpClient.PORT, portEdit.getText().toString());
         ed.putString(FtpClient.USER, userEdit.getText().toString());
