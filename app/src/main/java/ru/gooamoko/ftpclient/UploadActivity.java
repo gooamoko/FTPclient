@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +18,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+
+import ru.gooamoko.ftpclient.asynctask.FilesUploadTask;
+import ru.gooamoko.ftpclient.asynctask.FtpClientTaskCallback;
+import ru.gooamoko.ftpclient.model.ConnectionParamsModel;
 
 public class UploadActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private TextView descriptionView;
+    private Button acceptUploadBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +35,14 @@ public class UploadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload);
 
         SharedPreferences sharedPreferences = getPreferences();
-        String host = sharedPreferences.getString(FtpClient.HOST, "");
-        String port = sharedPreferences.getString(FtpClient.PORT, "21");
-        String user = sharedPreferences.getString(FtpClient.USER, "");
-        String password = sharedPreferences.getString(FtpClient.PASSWORD, "");
+        final ConnectionParamsModel paramsModel = new ConnectionParamsModel(sharedPreferences);
+        final List<File> files = getFiles();
 
-        List<File> files = getFiles();
-
-        Button acceptUploadBtn = findViewById(R.id.acceptUploadButton);
+        acceptUploadBtn = findViewById(R.id.acceptUploadButton);
         acceptUploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile();
+                upload(paramsModel, files);
             }
         });
 
@@ -54,12 +55,12 @@ public class UploadActivity extends AppCompatActivity {
         });
 
         descriptionView = findViewById(R.id.uploadDescriptionView);
-        String message = String.format("host: %s\nport: %s\nFiles: %s", host, port, getFileNames(files));
+        String message = String.format(Locale.US, "host: %s\nport: %d\nFiles: %s", paramsModel.getHost(), paramsModel.getPort(), getFileNames(files));
         descriptionView.setText(message);
     }
 
     private String getFileNames(List<File> files) {
-        if (files == null || files.isEmpty()) {
+        if (isEmpty(files)) {
             return "No readable files";
         }
         StringBuilder builder = new StringBuilder();
@@ -70,8 +71,34 @@ public class UploadActivity extends AppCompatActivity {
     }
 
 
-    private void uploadFile() {
-        showToast("Данная функция пока не реализована.");
+    private void upload(ConnectionParamsModel paramsModel, List<File> files) {
+
+        if (isEmpty(files)) {
+            String message = getString(R.string.upload_error_msg);
+            showToast(message);
+        }
+
+        acceptUploadBtn.setEnabled(false);
+        final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
+            @Override
+            public void onFinishTask(String result) {
+                acceptUploadBtn.setEnabled(true);
+                String message;
+                if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
+                    message = getString(R.string.upload_success_msg);
+                } else {
+                    message = getString(R.string.upload_error_msg) + " " + result;
+                }
+                showToast(message);
+            }
+        };
+
+        FilesUploadTask uploadTask = new FilesUploadTask(paramsModel, files, callback);
+        uploadTask.execute();
+    }
+
+    private boolean isEmpty(List<?> collection) {
+        return collection == null || collection.isEmpty();
     }
 
     private List<File> getFiles() {
@@ -112,17 +139,6 @@ public class UploadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public String getMimeType(Uri uri) {
-        String type = null;
-        if (uri != null) {
-            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
-            if (extension != null) {
-                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-            }
-        }
-        return type;
     }
 
     private SharedPreferences getPreferences() {

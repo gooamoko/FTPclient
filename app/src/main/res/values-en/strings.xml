@@ -26,4 +26,6 @@
     <string name="upload_activity_label">Upload</string>
     <string name="upload_accept_btn">Start upload</string>
     <string name="upload_cancel_btn">Cancel upload</string>
+    <string name="upload_success_msg">Upload successfull.</string>
+    <string name="upload_error_msg">Upload failure.</string>
 </resources>

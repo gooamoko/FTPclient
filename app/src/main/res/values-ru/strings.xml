@@ -26,4 +26,6 @@
     <string name="upload_activity_label">Загрузить</string>
     <string name="upload_accept_btn">Начать загрузку</string>
     <string name="upload_cancel_btn">Отменить загрузку</string>
+    <string name="upload_success_msg">Загрузка выполнена успешно.</string>
+    <string name="upload_error_msg">Ошибка загрузки.</string>
 </resources>

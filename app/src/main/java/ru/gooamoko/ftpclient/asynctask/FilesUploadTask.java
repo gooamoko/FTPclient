@@ -1,12 +1,17 @@
 package ru.gooamoko.ftpclient.asynctask;
 
+import java.io.File;
+import java.util.List;
+
 import ru.gooamoko.ftpclient.FtpClient;
 import ru.gooamoko.ftpclient.model.ConnectionParamsModel;
 
-public class ConnectionCheckTask extends FtpClientTask {
+public class FilesUploadTask extends FtpClientTask {
+    private final List<File> files;
 
-    public ConnectionCheckTask(ConnectionParamsModel paramsModel, FtpClientTaskCallback callback) {
+    public FilesUploadTask(ConnectionParamsModel paramsModel, List<File> files, FtpClientTaskCallback callback) {
         super(paramsModel, callback);
+        this.files = files;
     }
 
     @Override
@@ -14,6 +19,7 @@ public class ConnectionCheckTask extends FtpClientTask {
         try {
             FtpClient client = getClient();
             client.open();
+            client.upload(files);
             client.close();
             return FtpClient.SUCCESS;
         } catch (Exception e) {

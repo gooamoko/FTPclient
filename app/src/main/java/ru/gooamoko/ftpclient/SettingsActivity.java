@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ru.gooamoko.ftpclient.asynctask.ConnectionCheckTask;
 import ru.gooamoko.ftpclient.asynctask.FtpClientTaskCallback;
+import ru.gooamoko.ftpclient.model.ConnectionParamsModel;
 
 public class SettingsActivity extends AppCompatActivity {
     private Button checkButton;
@@ -64,8 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 };
 
-                ConnectionCheckTask checkTask = new ConnectionCheckTask(callback);
-                checkTask.execute(host, port, user, password);
+                ConnectionParamsModel paramsModel = new ConnectionParamsModel(host, port, user, password);
+                ConnectionCheckTask checkTask = new ConnectionCheckTask(paramsModel, callback);
+                checkTask.execute();
             }
         });
     }

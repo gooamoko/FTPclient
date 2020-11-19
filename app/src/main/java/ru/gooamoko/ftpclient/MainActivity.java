@@ -2,7 +2,6 @@ package ru.gooamoko.ftpclient;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,12 +74,6 @@ public class MainActivity extends AppCompatActivity {
         uploadIntent.setClipData(fileIntent.getClipData());
         uploadIntent.setData(fileIntent.getData());
         startActivity(uploadIntent);
-    }
-
-    private void showToast(String message) {
-        Context context = getApplicationContext();
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-        toast.show();
     }
 
     private void selectFileToUpload() {
