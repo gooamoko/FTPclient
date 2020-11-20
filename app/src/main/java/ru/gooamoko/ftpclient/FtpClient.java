@@ -66,14 +66,18 @@ public class FtpClient {
 
         try {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
-            ftp.enterLocalPassiveMode();
+//            ftp.enterLocalPassiveMode();
 
             for (File file : source) {
                 // TODO: 20.11.20 Возможно, стоит загружать разные типы файлов в разные папки
                 InputStream input = new FileInputStream(file);
-                ftp.storeFile(UPLOAD_DIR + file.getName(), input);
+                boolean success = ftp.storeFile(UPLOAD_DIR + file.getName(), input);
+                if (!success) {
+                    throw new FtpException("File upload error");
+                }
+                input.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new FtpException("File upload error", e);
         }
     }

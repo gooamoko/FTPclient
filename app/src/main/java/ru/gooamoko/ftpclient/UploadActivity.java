@@ -64,8 +64,13 @@ public class UploadActivity extends AppCompatActivity {
             return "No readable files";
         }
         StringBuilder builder = new StringBuilder();
+        boolean first = true;
         for (File file : files) {
-            builder.append(file.getName()).append(", ");
+            if (!first) {
+                builder.append(",\n");
+            }
+            builder.append(file.getName());
+            first = false;
         }
         return builder.toString();
     }
@@ -82,13 +87,15 @@ public class UploadActivity extends AppCompatActivity {
         final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
             @Override
             public void onFinishTask(String result) {
-                acceptUploadBtn.setEnabled(true);
                 String message;
                 if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
                     message = getString(R.string.upload_success_msg);
                 } else {
-                    message = getString(R.string.upload_error_msg) + " " + result;
+                    message = getString(R.string.upload_error_msg);
                 }
+
+                acceptUploadBtn.setEnabled(true);
+                finish();
                 showToast(message);
             }
         };

@@ -7,8 +7,10 @@
     tools:context=".UploadActivity">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fadingEdge="horizontal"
+        android:gravity="right|top|left"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +20,16 @@
         <TextView
             android:id="@+id/uploadDescriptionView"
             android:layout_width="match_parent"
-            android:layout_height="181dp" />
+            android:layout_height="wrap_content"
+            android:fadingEdge="horizontal"
+            android:gravity="bottom|right|left"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="14sp"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/acceptUploadButton"
@@ -31,5 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/upload_cancel_btn" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
