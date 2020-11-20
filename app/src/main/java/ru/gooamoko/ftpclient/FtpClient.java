@@ -4,6 +4,7 @@ import android.webkit.MimeTypeMap;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
@@ -22,8 +23,11 @@ public class FtpClient {
     public static final String PASSWORD = "password";
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
-
-    private static final String UPLOAD_DIR = "video/";
+    public static final String OTHER_FOLDER = "other/";
+    public static final String VIDEO_FOLDER = "video/";
+    public static final String AUDIO_FOLDER = "audio/";
+    public static final String IMAGES_FOLDER = "images/";
+    public static final String PDF_FOLDER = "pdf/";
 
     private final ConnectionParamsModel connectionParams;
     private FTPClient ftp;
@@ -66,16 +70,38 @@ public class FtpClient {
 
         try {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
-//            ftp.enterLocalPassiveMode();
-
             for (File file : source) {
-                // TODO: 20.11.20 Возможно, стоит загружать разные типы файлов в разные папки
+                // Угадаем имя каалога по расширению файла.
+                String folder = guessPathByMimeType(file);
+                boolean exists = false;
+
+                // Проверим, есть ли у нас такой каталог?
+                FTPFile[] ftpFiles = ftp.listDirectories();
+                for (FTPFile ftpFile : ftpFiles) {
+                    String existingFolder = ftpFile.getName() + "/";
+                    if (folder.equalsIgnoreCase(existingFolder)) {
+                        folder = existingFolder;
+                        exists = true;
+                        break;
+                    }
+                }
+
+                // Если каталога нет, создадим его.
+                if (!exists) {
+                    boolean created = ftp.makeDirectory(folder);
+                    if (!created) {
+                        throw new FtpException("Directory creation error");
+                    }
+                }
+
                 InputStream input = new FileInputStream(file);
-                boolean success = ftp.storeFile(UPLOAD_DIR + file.getName(), input);
-                if (!success) {
+                ftp.enterLocalPassiveMode();
+                boolean uploaded = ftp.storeFile(folder + file.getName(), input);
+                if (!uploaded) {
                     throw new FtpException("File upload error");
                 }
                 input.close();
+                ftp.enterLocalActiveMode();
             }
         } catch (IOException e) {
             throw new FtpException("File upload error", e);
@@ -88,7 +114,7 @@ public class FtpClient {
     }
 
 
-    private String getMimeType(File file) {
+    private String guessPathByMimeType(File file) {
         String type = null;
         if (file != null) {
             String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
@@ -96,6 +122,22 @@ public class FtpClient {
                 type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             }
         }
-        return type;
+        if (type == null || type.trim().isEmpty()) {
+            return OTHER_FOLDER;
+        }
+        String trimmedType = type.toLowerCase().trim();
+        if (trimmedType.startsWith("video")) {
+            return VIDEO_FOLDER;
+        }
+        if (trimmedType.startsWith("audio")) {
+            return AUDIO_FOLDER;
+        }
+        if (trimmedType.startsWith("image")) {
+            return IMAGES_FOLDER;
+        }
+        if ("application/pdf".equalsIgnoreCase(trimmedType)) {
+            return PDF_FOLDER;
+        }
+        return OTHER_FOLDER;
     }
 }
