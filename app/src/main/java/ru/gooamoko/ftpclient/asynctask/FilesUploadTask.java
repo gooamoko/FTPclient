@@ -1,15 +1,15 @@
 package ru.gooamoko.ftpclient.asynctask;
 
-import java.io.File;
 import java.util.List;
 
 import ru.gooamoko.ftpclient.FtpClient;
 import ru.gooamoko.ftpclient.model.ConnectionParamsModel;
+import ru.gooamoko.ftpclient.model.FileInfo;
 
 public class FilesUploadTask extends FtpClientTask {
-    private final List<File> files;
+    private final List<FileInfo> files;
 
-    public FilesUploadTask(ConnectionParamsModel paramsModel, List<File> files, FtpClientTaskCallback callback) {
+    public FilesUploadTask(ConnectionParamsModel paramsModel, List<FileInfo> files, FtpClientTaskCallback callback) {
         super(paramsModel, callback);
         this.files = files;
     }

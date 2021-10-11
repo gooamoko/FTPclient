@@ -6,10 +6,10 @@ import ru.gooamoko.ftpclient.FtpClient;
 
 public class ConnectionParamsModel {
     private static final int DEFAULT_FTP_PORT = 21;
-    private String host;
+    private final String host;
     private int port;
-    private String user;
-    private String password;
+    private final String user;
+    private final String password;
 
     public ConnectionParamsModel(SharedPreferences preferences) {
         host = preferences.getString(FtpClient.HOST, "");

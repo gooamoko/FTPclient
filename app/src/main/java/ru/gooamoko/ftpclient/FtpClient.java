@@ -7,13 +7,12 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import ru.gooamoko.ftpclient.model.ConnectionParamsModel;
+import ru.gooamoko.ftpclient.model.FileInfo;
 
 public class FtpClient {
     public static final String PREFERENCES_NAME = FtpClient.class.getName();
@@ -59,7 +58,7 @@ public class FtpClient {
         }
     }
 
-    public void upload(List<File> source) {
+    public void upload(List<FileInfo> source) {
         if (!connected) {
             throw new FtpException("Can't connect to FTP server");
         }
@@ -70,9 +69,9 @@ public class FtpClient {
 
         try {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
-            for (File file : source) {
+            for (FileInfo file : source) {
                 // Угадаем имя каалога по расширению файла.
-                String folder = guessPathByMimeType(file);
+                String folder = guessPathByMimeType(file.getName());
                 boolean exists = false;
 
                 // Проверим, есть ли у нас такой каталог?
@@ -94,7 +93,7 @@ public class FtpClient {
                     }
                 }
 
-                InputStream input = new FileInputStream(file);
+                InputStream input = file.getData();
                 ftp.enterLocalPassiveMode();
                 boolean uploaded = ftp.storeFile(folder + file.getName(), input);
                 if (!uploaded) {
@@ -114,10 +113,10 @@ public class FtpClient {
     }
 
 
-    private String guessPathByMimeType(File file) {
+    private String guessPathByMimeType(String fileName) {
         String type = null;
-        if (file != null) {
-            String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+        if (fileName != null) {
+            String extension = MimeTypeMap.getFileExtensionFromUrl(fileName);
             if (extension != null) {
                 type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             }
