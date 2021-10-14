@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,35 +39,29 @@ public class SettingsActivity extends AppCompatActivity {
         passwordEdit.setText(sharedPreferences.getString(FtpClient.PASSWORD, ""));
 
         checkButton = findViewById(R.id.checkButton);
-        checkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String host = hostEdit.getText().toString();
-                final String port = portEdit.getText().toString();
-                final String user = userEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
+        checkButton.setOnClickListener(v -> {
+            final String host = hostEdit.getText().toString();
+            final String port = portEdit.getText().toString();
+            final String user = userEdit.getText().toString();
+            String password = passwordEdit.getText().toString();
 
-                checkButton.setEnabled(false);
-                final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
-                    @Override
-                    public void onFinishTask(String result) {
-                        checkButton.setEnabled(true);
-                        if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
-                            storeProperties();
-                            String successMsg = getString(R.string.check_success_msg);
-                            String savedMessage = getString(R.string.settings_save_message);
-                            showToast(successMsg + "\n" + savedMessage);
-                        } else {
-                            final String errorMsg = getString(R.string.check_error_msg);
-                            showToast(String.format(errorMsg, host, port, user));
-                        }
-                    }
-                };
+            checkButton.setEnabled(false);
+            final FtpClientTaskCallback callback = result -> {
+                checkButton.setEnabled(true);
+                if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
+                    storeProperties();
+                    String successMsg = getString(R.string.check_success_msg);
+                    String savedMessage = getString(R.string.settings_save_message);
+                    showToast(successMsg + "\n" + savedMessage);
+                } else {
+                    final String errorMsg = getString(R.string.check_error_msg);
+                    showToast(String.format(errorMsg, host, port, user));
+                }
+            };
 
-                ConnectionParamsModel paramsModel = new ConnectionParamsModel(host, port, user, password);
-                ConnectionCheckTask checkTask = new ConnectionCheckTask(paramsModel, callback);
-                checkTask.execute();
-            }
+            ConnectionParamsModel paramsModel = new ConnectionParamsModel(host, port, user, password);
+            ConnectionCheckTask checkTask = new ConnectionCheckTask(paramsModel, callback);
+            checkTask.execute();
         });
     }
 

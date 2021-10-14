@@ -1,12 +1,11 @@
 package ru.gooamoko.ftpclient;
 
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,20 +35,10 @@ public class UploadActivity extends AppCompatActivity {
         final List<FileInfo> files = getFiles();
 
         acceptUploadBtn = findViewById(R.id.acceptUploadButton);
-        acceptUploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upload(paramsModel, files);
-            }
-        });
+        acceptUploadBtn.setOnClickListener(v -> upload(paramsModel, files));
 
         Button cancelUploadBtn = findViewById(R.id.cancelUploadButton);
-        cancelUploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        cancelUploadBtn.setOnClickListener(v -> finish());
 
         TextView descriptionView = findViewById(R.id.uploadDescriptionView);
         String message = String.format(Locale.US, "host: %s\nport: %d\nFiles: %s", paramsModel.getHost(), paramsModel.getPort(), getFileNames(files));
@@ -81,20 +70,17 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         acceptUploadBtn.setEnabled(false);
-        final FtpClientTaskCallback callback = new FtpClientTaskCallback() {
-            @Override
-            public void onFinishTask(String result) {
-                String message;
-                if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
-                    message = getString(R.string.upload_success_msg);
-                } else {
-                    message = getString(R.string.upload_error_msg);
-                }
-
-                acceptUploadBtn.setEnabled(true);
-                finish();
-                showToast(message);
+        final FtpClientTaskCallback callback = result -> {
+            String message;
+            if (FtpClient.SUCCESS.equalsIgnoreCase(result)) {
+                message = getString(R.string.upload_success_msg);
+            } else {
+                message = getString(R.string.upload_error_msg);
             }
+
+            acceptUploadBtn.setEnabled(true);
+            finish();
+            showToast(message);
         };
 
         FilesUploadTask uploadTask = new FilesUploadTask(paramsModel, files, callback);
@@ -110,46 +96,29 @@ public class UploadActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             ClipData clipData = intent.getClipData();
+            ContentResolver contentResolver = getContentResolver();
+
             if (clipData != null) {
                 int itemCount = clipData.getItemCount();
-
                 if (itemCount > 0) {
-                    ClipData.Item item = clipData.getItemAt(0);
-                    FileInfo file = getFile(item.getUri());
-                    if (file.exists()) {
-                        fileList.add(file);
+                    for (int index = 0; index < itemCount; index++) {
+                        ClipData.Item item = clipData.getItemAt(index);
+                        FileInfo file = new FileInfo(contentResolver, item.getUri());
+                        if (file.exists()) {
+                            fileList.add(file);
+                        }
                     }
                 }
             }
-            Uri intentData = intent.getData();
-            if (intentData != null) {
-                FileInfo file = getFile(intentData);
-                if (file.exists()) {
-                    fileList.add(file);
-                }
+
+            FileInfo dataInfo = new FileInfo(contentResolver, intent.getData());
+            if (dataInfo.exists()) {
+                fileList.add(dataInfo);
             }
         }
         return fileList;
     }
 
-
-    private FileInfo getFile(Uri uri) {
-        FileInfo fileInfo = new FileInfo();
-        try {
-            if (uri != null) {
-                List<String> pathSegments = uri.getPathSegments();
-                if (!isEmpty(pathSegments)) {
-                    String fileName = pathSegments.get(pathSegments.size() - 1);
-                    String[] parts = fileName.split("/");
-                    fileInfo.setName(parts[parts.length -1]);
-                }
-                fileInfo.setData(getContentResolver().openInputStream(uri));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return fileInfo;
-    }
 
     private SharedPreferences getPreferences() {
         if (preferences == null) {
